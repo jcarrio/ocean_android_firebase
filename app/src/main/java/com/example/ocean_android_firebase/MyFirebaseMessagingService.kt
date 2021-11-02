@@ -12,6 +12,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
+
     override fun onNewToken(token: String) {
         // Clicar em onNewToken com CTRL+botão direito
         // Se no código não faz nada, não precisa chamar (comentado->apagar)
@@ -23,6 +24,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // Idem acima (comentado->apagar)
         //super.onMessageReceived(p0)
         Log.d("FIREBASE", "Message received:: $remoteMessage")
+
+        // Envia broadcast para atualizar tela
+        val intent = Intent()
+        intent.action = "com.example.ocean_android_firebase.ADD_RECEIVED"
+        intent.flags = Intent.FLAG_INCLUDE_STOPPED_PACKAGES
+        sendBroadcast(intent)
 
         val notification = remoteMessage.notification
         val data = remoteMessage.data
