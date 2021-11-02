@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "815969384520",
+    "project_id": "ocean-android-firebase",
+    "storage_bucket": "ocean-android-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815969384520:android:e8cb2700067817227dc07d",
+        "android_client_info": {
+          "package_name": "com.example.ocean_android_firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "815969384520-22ni52t9sq9ab2j855l3n6keg9st7m99.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrRcGOW1SPuAR4Q-ky-td3EijyStbmfIk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "815969384520-22ni52t9sq9ab2j855l3n6keg9st7m99.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
