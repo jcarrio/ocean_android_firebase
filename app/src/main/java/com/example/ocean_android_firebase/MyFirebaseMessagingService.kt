@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -22,7 +23,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         // Idem acima (comentado->apagar)
-        //super.onMessageReceived(p0)
+        //super.onMessageReceived(remoteMessage)
         Log.d("FIREBASE", "Message received:: $remoteMessage")
 
         // Envia broadcast para atualizar tela
@@ -33,15 +34,16 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         val notification = remoteMessage.notification
         val data = remoteMessage.data
-        val chave1 = data["Chave1"]
-        println(chave1) // Valor 1
 
+        // Pelo site envia como notification, e pelo app envia como data
         notification?.let {
             pushNotification(it.title, it.body)
+        } ?:run {
+            pushNotification(data["title"], data["message"], true)
         }
     }
 
-    private fun pushNotification(title: String?, body: String?) {
+    private fun pushNotification(title: String?, body: String?, isData: Boolean = false) {
         // Obtemos o serviço Notification Manager
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         // Criação do Canal de Notificações, apenas para Android 26 (OREO) ou superior
@@ -51,6 +53,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT).apply {
                 description = channelDescription
+                enableLights(true)
+                lightColor = Color.GREEN
             }
             notificationManager.createNotificationChannel(channel)
         }
@@ -65,15 +69,21 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
         val pendingIntent = PendingIntent.getActivity(this,0,intent,pendingIntentFlags)
         // Criação da notificação
+        var smallIcon = android.R.drawable.ic_dialog_alert  // Icone para notification
+        if (isData)
+            smallIcon = R.drawable.ic_baseline_chat_24  // Icone para data
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setContentTitle(title)
             .setContentText(body)
-            .setSmallIcon(android.R.drawable.ic_dialog_alert)
+            .setSmallIcon(smallIcon)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
         // Envio da notificação
         val notification = notificationBuilder.build()
-        val notificationId = 1  // Para controlar notificações após o envio
+        // Para controlar notificações após o envio, abaixo seria um número fixo
+        var notificationId = 1  // Aleatório, notificações diferentes e separadas
+        if (isData)
+            notificationId = 2
         notificationManager.notify(notificationId, notification)
     }
 }
